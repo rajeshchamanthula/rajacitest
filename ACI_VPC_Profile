@@ -1,0 +1,39 @@
+---
+- name: Policy Group Creation
+  hosts: apic
+  connection: local
+  gather_facts: False
+
+
+  tasks:
+    - name: Policy Group Creation
+      aci_interface_policy_leaf_policy_group:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        lag_type: node
+        policy_group: chami_vpc1
+        link_level_policy: 10G
+        cdp_policy: CDP_Enable
+        lldp_policy: LLDP_Enable
+        stp_interface_policy: BPDUGuard_Enable
+        aep: lg1fb1ag1cc20mel01
+        port_channel_policy: LACP_Enable
+        state: present
+
+    - name: Associate an access port block (single port) to an interface selector
+      aci_access_port_to_interface_policy_leaf_profile:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: False
+        leaf_interface_profile: Leaf_101
+        access_port_selector: test_chami_2
+        leaf_port_blk: chami_vpc1
+        from_port: 16
+        to_port: 16
+        leaf_port_blk_description: chami
+        policy_group: chami_vpc1
+        state: present
