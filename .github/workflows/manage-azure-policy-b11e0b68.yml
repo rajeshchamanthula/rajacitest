@@ -1,0 +1,40 @@
+name: manage-azure-policy-b11e0b68
+on:
+  workflow_dispatch:
+    inputs:
+      remarks:
+        description: 'Reason for triggering the workflow run'
+        required: false
+        default: 'Updating Azure Policies'
+
+
+## Uncomment the following if you wish to automatically trigger workflow run with every commit
+#
+#  push:
+#    paths:
+#      - 'policytest/initiatives/I&T_-_Core_Monitoring_296bc0fdcca3447bb46ce4ad/**'
+#      - 'policytest/initiatives/I&T_-_Allow_Locations_9451833bc02f47a0b109e789/**'
+#      - 'policytest/initiatives/I&T_-_Core_Initiative_95872509a3ed417e95aef526/**'
+#      - 'policytest/initiatives/I&T_-_PrivateLinks_977cab38c4e64050bf6870a8/**'
+#      - 'policytest/policies/Management_ports_should_be_closed_on_your_virtual_machines_22730e10-96f6-4aac-ad84-9383d35b5917/**'
+#      - .github/workflows/manage-azure-policy-b11e0b68.yml
+jobs:
+  apply-azure-policy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS_b11e0b68}}
+        allow-no-subscriptions: true
+    - name: Create or Update Azure Policies
+      uses: azure/manage-azure-policy@v0
+      with:
+        paths: |
+          policytest/initiatives/I&T_-_Core_Monitoring_296bc0fdcca3447bb46ce4ad/**
+          policytest/initiatives/I&T_-_Allow_Locations_9451833bc02f47a0b109e789/**
+          policytest/initiatives/I&T_-_Core_Initiative_95872509a3ed417e95aef526/**
+          policytest/initiatives/I&T_-_PrivateLinks_977cab38c4e64050bf6870a8/**
+          policytest/policies/Management_ports_should_be_closed_on_your_virtual_machines_22730e10-96f6-4aac-ad84-9383d35b5917/**
